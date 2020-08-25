@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <form>
+        id:<input type="text" id="id" value="123"/><br>
+        name:<input type="text" id="name" value="category xxx"/><br>
+        <input type="button" id="sender" value="submit"/>
+        <input type="button" id="getOne" value="getOne"/>
+        <input type="button" id="getMany" value="getMany"/>
+    </form>
+    <div id="messageDiv"></div>
+    <script>
+        $("#sender").click(function(){
+            var id=$("#id").val();
+            var name=$("#name").val();
+            var category={id:id,name:name};
+            var json=JSON.stringify(category);
+            var page="submitCategory";
+            $.ajax({
+                type:"post",
+                data:json,
+                dataType:"json",
+                url:page,
+                contentType:"application/json;charset=UTF-8",
+                success:function(data){
+
+                    alert(data);
+                }
+            });
+        });
+        $("#getOne").click(function(){
+            var url="getOneCategory";
+            $.post(
+                url,
+                function(data){
+                    console.log(data);
+                    console.log(typeof data);
+                    var json=$.parseJSON(data);
+                    console.log(json);
+                    $("#id").val(json.category.id);
+                    $("#name").val(json.category.name);
+                }
+            );
+        });
+        $("#getMany").click(function(){
+            var url="getManyCategory";
+            $.post(
+                url,
+                function(data){
+                    categorys=$.parseJSON(data);
+                    console.log(typeof categorys);
+                    for(i in categorys){
+                        console.log(categorys[i].id+" "+categorys[i].name);
+                    }
+                }
+            );
+        });
+    </script>
+</body>
+</html>
